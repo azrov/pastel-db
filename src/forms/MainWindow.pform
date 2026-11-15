@@ -1,0 +1,330 @@
+object MainForm: TMainForm
+  Title = 'Pastel DB'
+  Width = 1180
+  Height = 740
+  Padding = 0
+  Gap = 0
+  OnCreate = FormCreate
+  object Menu: TMenuBar
+    object DatabaseMenu: TMenuItem
+      Caption = 'Database'
+      object ConnectItem: TMenuItem
+        Caption = 'Connect...'
+        ShortCut = 'Ctrl+O'
+        OnClick = ConnectClick
+      end
+      object NewSqliteItem: TMenuItem
+        Caption = 'New SQLite file...'
+        OnClick = NewSqliteClick
+      end
+      object RefreshItem: TMenuItem
+        Caption = 'Refresh'
+        ShortCut = 'Ctrl+R'
+        OnClick = RefreshClick
+      end
+      object Sep0: TMenuItem
+        Caption = '-'
+      end
+      object NewTableItem: TMenuItem
+        Caption = 'New table...'
+        ShortCut = 'Ctrl+N'
+        OnClick = NewTableClick
+      end
+      object ImportItem: TMenuItem
+        Caption = 'Import CSV / Excel...'
+        ShortCut = 'Ctrl+I'
+        OnClick = ImportClick
+      end
+      object DropTableItem: TMenuItem
+        Caption = 'Drop the table...'
+        OnClick = DropTableClick
+      end
+      object Sep2: TMenuItem
+        Caption = '-'
+      end
+      object BackupItem: TMenuItem
+        Caption = 'Backup...'
+        OnClick = BackupClick
+      end
+      object RestoreItem: TMenuItem
+        Caption = 'Restore a backup...'
+        OnClick = RestoreClick
+      end
+      object Sep1: TMenuItem
+        Caption = '-'
+      end
+      object QuitItem: TMenuItem
+        Caption = 'Quit'
+        ShortCut = 'Ctrl+Q'
+        OnClick = QuitClick
+      end
+    end
+    object QueryMenu: TMenuItem
+      Caption = 'Query'
+      object RunItem: TMenuItem
+        Caption = 'Run'
+        ShortCut = 'F5'
+        OnClick = RunClick
+      end
+      object NewQueryItem: TMenuItem
+        Caption = 'New query tab'
+        ShortCut = 'Ctrl+T'
+        OnClick = NewQueryClick
+      end
+      object CloseQueryItem: TMenuItem
+        Caption = 'Close the query tab'
+        ShortCut = 'Ctrl+W'
+        OnClick = CloseQueryClick
+      end
+      object SelectQueryItem: TMenuItem
+        Caption = 'Select the table''s rows'
+        OnClick = SelectQueryClick
+      end
+      object HistoryItem: TMenuItem
+        Caption = 'History'
+        ShortCut = 'Ctrl+H'
+        OnClick = HistoryClick
+      end
+    end
+    object ExportMenu: TMenuItem
+      Caption = 'Export'
+      object ExportItem: TMenuItem
+        Caption = 'Export the rows shown...'
+        ShortCut = 'Ctrl+E'
+        OnClick = ExportClick
+      end
+    end
+    object ViewMenu: TMenuItem
+      Caption = 'View'
+      object DarkItem: TMenuItem
+        Caption = 'Dark'
+        OnClick = DarkClick
+      end
+    end
+  end
+  object Tools: TToolBar
+    object ConnectButton: TButton
+      Text = 'Connect'
+      Icon = 'link'
+      Style = Flat
+      Hint = 'Ctrl+O'
+      OnClick = ConnectClick
+    end
+    object RefreshButton: TButton
+      Text = 'Refresh'
+      Icon = 'refresh'
+      Style = Flat
+      Hint = 'Ctrl+R'
+      OnClick = RefreshClick
+    end
+    object RunButton: TButton
+      Text = 'Run'
+      Icon = 'play'
+      Style = Flat
+      Hint = 'F5'
+      OnClick = RunClick
+    end
+    object StopButton: TButton
+      Text = 'Stop'
+      Icon = 'stop'
+      Style = Flat
+      Hint = 'Stop waiting for the query'
+      OnClick = StopClick
+    end
+    object ExportButton: TButton
+      Text = 'Export'
+      Icon = 'download'
+      Style = Flat
+      Hint = 'CSV, Excel, PDF, JSON (Ctrl+E)'
+      OnClick = ExportClick
+    end
+    object ToolSpacer: TSpacer
+      Grow = 1
+    end
+    object ConnectionLabel: TLabel
+      Text = 'Not connected'
+      Color = '#6B7080'
+    end
+  end
+  object Body: TRow
+    Grow = 1
+    Gap = 0
+    Align = Stretch
+    object Side: TColumn
+      Width = 260
+      Padding = 8
+      Gap = 6
+      object FilterEdit: TEdit
+        Placeholder = 'Filter tables'
+        OnChange = FilterChange
+      end
+      object Tables: TTreeView
+        Grow = 1
+        OnChange = TablesChange
+      end
+    end
+    object SideSplitter: TSplitter
+    end
+    object Pages: TTabControl
+      Grow = 1
+      object DataPage: TTabSheet
+        Caption = 'Data'
+        object DataBar: TRow
+          Gap = 6
+          object WhereEdit: TEdit
+            Grow = 1
+            Placeholder = 'where ...   (name like ''A%'' and total > 100)'
+            OnSubmit = ApplyWhereClick
+          end
+          object ApplyButton: TButton
+            Text = 'Filter'
+            Style = Secondary
+            OnClick = ApplyWhereClick
+          end
+          object PrevButton: TButton
+            Text = '<'
+            Style = Secondary
+            Width = 40
+            OnClick = PrevClick
+          end
+          object PageLabel: TLabel
+            Text = ''
+            Width = 120
+          end
+          object NextButton: TButton
+            Text = '>'
+            Style = Secondary
+            Width = 40
+            OnClick = NextClick
+          end
+          object AddRowButton: TButton
+            Text = 'Add row'
+            Style = Secondary
+            OnClick = AddRowClick
+          end
+          object DeleteRowButton: TButton
+            Text = 'Delete row'
+            Style = Secondary
+            OnClick = DeleteRowClick
+          end
+        end
+        object DataGrid: TGrid
+          Grow = 1
+          Editable = True
+          OnCellEdit = DataGridCellEdit
+        end
+      end
+      object StructurePage: TTabSheet
+        Caption = 'Structure'
+        object StructureGrid: TGrid
+          Grow = 1
+        end
+      end
+      object QueryPage: TTabSheet
+        Caption = 'SQL'
+        object QueryTabs: TFlow
+          Gap = 4
+          object NewTabButton: TButton
+            Text = '+'
+            Style = Flat
+            Width = 36
+            Hint = 'A new query tab (Ctrl+T)'
+            OnClick = NewQueryClick
+          end
+          object CloseTabButton: TButton
+            Text = '×'
+            Style = Flat
+            Width = 36
+            Hint = 'Close this query tab (Ctrl+W)'
+            OnClick = CloseQueryClick
+          end
+        end
+        object SqlMemo: TMemo
+          Height = 220
+          WordWrap = False
+          Placeholder = 'select * from ...    (F5 runs it; several statements: separated by ;  Ctrl+Space: names)'
+          OnChange = SqlChange
+        end
+        object SqlSplitter: TSplitter
+        end
+        object ResultPart: TColumn
+          Grow = 1
+          Gap = 6
+          object QueryBar: TRow
+            Gap = 8
+            object RunQueryButton: TButton
+              Text = 'Run'
+              Icon = 'play'
+              OnClick = RunClick
+            end
+            object QueryLabel: TLabel
+              Grow = 1
+              Text = ''
+            end
+          end
+          object ResultGrid: TGrid
+            Grow = 1
+          end
+        end
+      end
+      object HistoryPage: TTabSheet
+        Caption = 'History'
+        object HistoryBar: TRow
+          Gap = 6
+          object HistoryFilter: TEdit
+            Grow = 1
+            Placeholder = 'Find in the queries that ran'
+            OnChange = HistoryFilterChange
+          end
+          object HistoryOpenButton: TButton
+            Text = 'Open in the editor'
+            Style = Secondary
+            OnClick = HistoryOpenClick
+          end
+          object HistoryClearButton: TButton
+            Text = 'Clear'
+            Style = Secondary
+            OnClick = HistoryClearClick
+          end
+        end
+        object HistoryList: TListBox
+          Grow = 1
+          OnDblClick = HistoryOpenClick
+          OnChange = HistoryListChange
+        end
+        object HistorySql: TMemo
+          Height = 140
+          ReadOnly = True
+          WordWrap = False
+        end
+      end
+    end
+  end
+  object StatusBar: TStatusBar
+    object StatusLabel: TLabel
+      Text = 'Open a database: Database > Connect (Ctrl+O)'
+      FontSize = 12
+    end
+  end
+  object ExportDialog: TSaveDialog
+    Filter = 'CSV|*.csv|Excel|*.xlsx|PDF|*.pdf|JSON|*.json'
+    DefaultExt = '.csv'
+    Title = 'Export the rows'
+  end
+  object ImportDialog: TOpenDialog
+    Filter = 'CSV and Excel|*.csv;*.xlsx;*.txt|All files|*'
+    Title = 'Import rows'
+  end
+  object BackupDialog: TSaveDialog
+    Title = 'Backup the database'
+  end
+  object RestoreDialog: TOpenDialog
+    Filter = 'Backups|*.db;*.sqlite;*.sql|All files|*'
+    Title = 'Restore a backup'
+  end
+  object NewDbDialog: TSaveDialog
+    Filter = 'SQLite|*.db;*.sqlite;*.sqlite3'
+    DefaultExt = '.db'
+    Title = 'A new SQLite file'
+  end
+end
