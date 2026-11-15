@@ -1,0 +1,97 @@
+object ConnectForm: TConnectForm
+  Title = 'Connect to a database'
+  Width = 620
+  Height = 480
+  OnCreate = FormCreate
+  object Parts: TRow
+    Grow = 1
+    Gap = 16
+    object SavedColumn: TColumn
+      Width = 190
+      Gap = 6
+      object SavedLabel: TLabel
+        Text = 'Saved'
+        Bold = True
+      end
+      object SavedList: TListBox
+        Grow = 1
+        OnChange = SavedChange
+        OnDblClick = ConnectClick
+      end
+      object ForgetButton: TButton
+        Text = 'Forget'
+        Style = Secondary
+        OnClick = ForgetClick
+      end
+    end
+    object Fields: TColumn
+      Grow = 1
+      Gap = 8
+      object KindBox: TComboBox
+        Items = ('SQLite', 'PostgreSQL', 'MySQL / MariaDB')
+        ItemIndex = 0
+        OnChange = KindChange
+      end
+      object FileRow: TRow
+        Gap = 6
+        object FileEdit: TEdit
+          Grow = 1
+          Placeholder = 'The SQLite file'
+        end
+        object BrowseButton: TButton
+          Text = 'Browse...'
+          Style = Secondary
+          OnClick = BrowseClick
+        end
+      end
+      object HostEdit: TEdit
+        Placeholder = 'Host (localhost)'
+      end
+      object PortEdit: TEdit
+        Placeholder = 'Port (5432, 3306)'
+      end
+      object DatabaseEdit: TEdit
+        Placeholder = 'Database'
+      end
+      object UserEdit: TEdit
+        Placeholder = 'User'
+      end
+      object PasswordEdit: TEdit
+        Placeholder = 'Password'
+        Password = True
+      end
+      object NameEdit: TEdit
+        Placeholder = 'A name to save it under (optional)'
+      end
+      object RememberCheck: TCheckBox
+        Text = 'Remember the password (kept by the system''s keyring)'
+      end
+      object ErrorLabel: TLabel
+        Text = ''
+        Color = '#D32F2F'
+        WordWrap = True
+      end
+    end
+  end
+  object Buttons: TRow
+    Gap = 8
+    object ButtonSpacer: TSpacer
+      Grow = 1
+    end
+    object CancelButton: TButton
+      Text = 'Cancel'
+      Style = Secondary
+      Cancel = True
+      ModalResult = mrCancel
+    end
+    object OkButton: TButton
+      Text = 'Connect'
+      Default = True
+      OnClick = ConnectClick
+    end
+  end
+  object OpenDbDialog: TOpenDialog
+    Filter = 'SQLite|*.db;*.sqlite;*.sqlite3;*.db3|All files|*'
+    Title = 'Open a SQLite file'
+  end
+end
