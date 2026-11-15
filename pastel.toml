@@ -2,7 +2,7 @@
 
 [project]
 name = "pastel-db"
-version = "1.0.0"
+version = "1.0.2"
 pastel = "2.0"          # the Pastel version this project is made for
 title = "Pastel DB"       # the name in window lists, menus and installers
 type = "app"
